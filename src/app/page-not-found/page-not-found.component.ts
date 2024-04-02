@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component } from '@angular/core'
 
 @Component({
   selector: 'app-page-not-found',
@@ -10,8 +10,6 @@ import { Component } from '@angular/core';
       <a routerLink="/home">home</a>.
     </p>
   `,
-  styles: ``
+  styles: ``,
 })
-export class PageNotFoundComponent {
-
-}
+export class PageNotFoundComponent {}
