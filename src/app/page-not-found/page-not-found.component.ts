@@ -10,6 +10,6 @@ import { Component } from '@angular/core'
       <a routerLink="/home">home</a>.
     </p>
   `,
-  styles: ``,
+  styles: [``],
 })
 export class PageNotFoundComponent {}

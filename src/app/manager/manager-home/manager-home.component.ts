@@ -5,6 +5,6 @@ import { Component } from '@angular/core'
   standalone: true,
   imports: [],
   template: ` <p>manager-home works!</p> `,
-  styles: ``,
+  styles: [``],
 })
 export class ManagerHomeComponent {}
