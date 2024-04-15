@@ -16,7 +16,12 @@ export const routes: Routes = [
   },
   {
     path: 'pos',
-    loadChildren: () => import('./pos/pos.module').then((m) =>m.PosModule),
+    loadChildren: () => import('./pos/pos.module').then((m) => m.PosModule),
+  },
+  {
+    path: 'inventory',
+    loadChildren: () =>
+      import('./inventory/inventory.module').then((m) => m.InventoryModule),
   },
   { path: '**', component: PageNotFoundComponent },
 ]

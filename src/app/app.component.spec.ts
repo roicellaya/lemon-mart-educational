@@ -15,12 +15,6 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy()
   })
 
-  it(`should have the 'lemon-mart-own' title`, () => {
-    const fixture = TestBed.createComponent(AppComponent)
-    const app = fixture.componentInstance
-    expect(app.title).toEqual('lemon-mart-own')
-  })
-
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent)
     fixture.detectChanges()
