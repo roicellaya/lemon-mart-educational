@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
-import { commonTestingModules } from '../common/common.testing'
 
+import { commonTestingModules } from '../common/common.testing'
 import { InventoryComponent } from './inventory.component'
 
 describe('InventoryComponent', () => {
