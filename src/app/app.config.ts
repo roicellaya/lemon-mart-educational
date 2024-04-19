@@ -14,7 +14,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     {
       provide: AuthService,
-      useClass: InMemoryAuthService
-    }
+      useClass: InMemoryAuthService,
+    },
   ],
 }
