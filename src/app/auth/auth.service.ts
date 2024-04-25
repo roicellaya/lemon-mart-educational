@@ -1,7 +1,9 @@
+import { inject } from '@angular/core'
 import { jwtDecode } from 'jwt-decode'
 import { BehaviorSubject, Observable, throwError } from 'rxjs'
 import { catchError, filter, map, mergeMap, tap } from 'rxjs/operators'
 
+import { CacheService } from '../common/cache.service'
 import { transformError } from '../common/common'
 import { IUser, User } from '../user/user/user'
 import { Role } from './auth.enum'
@@ -11,6 +13,7 @@ export abstract class AuthService implements IAuthService {
 
   readonly authStatus$ = new BehaviorSubject<IAuthStatus>(defaultAuthStatus)
   readonly currentUser$ = new BehaviorSubject<IUser>(new User())
+  protected readonly cache = inject(CacheService)
 
   protected abstract authProvider(
     email: string,
@@ -20,8 +23,10 @@ export abstract class AuthService implements IAuthService {
   protected abstract getCurrentUser(): Observable<User>
 
   login(email: string, password: string): Observable<void> {
+    this.clearToken()
     const loginResponse$ = this.authProvider(email, password).pipe(
       map((value) => {
+        this.setToken(value.accessToken)
         const token = jwtDecode(value.accessToken)
         return this.transformJwtToken(token)
       }),
@@ -40,10 +45,19 @@ export abstract class AuthService implements IAuthService {
     return loginResponse$
   }
   logout(clearToken?: boolean | undefined): void {
+    if (clearToken) {
+      this.clearToken()
+    }
     setTimeout(() => this.authStatus$.next(defaultAuthStatus), 0)
   }
+  protected setToken(jwt: string) {
+    this.cache.setItem('jwt', jwt)
+  }
   getToken(): string {
-    throw new Error('Method not implemented.')
+    return this.cache.getItem('jwt') ?? ''
+  }
+  protected clearToken() {
+    this.cache.removeItem('jwt')
   }
 }
 
