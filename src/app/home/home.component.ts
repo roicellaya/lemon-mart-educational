@@ -6,18 +6,20 @@ import { combineLatest } from 'rxjs'
 import { filter, tap } from 'rxjs/operators'
 
 import { AuthService } from '../auth/auth.service'
+import { LoginComponent } from '../login/login.component'
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [FlexModule, MatButtonModule, RouterLink],
+  imports: [FlexModule, MatButtonModule, RouterLink, LoginComponent],
   template: `
-    <div fxLayout="column" fxLayoutAlign="center center">
-      <span class="mat-display-2">Hello, Limoncu!</span>
-      <button mat-raised-button color="primary" (click)="login()">
-        Login as Manager
-      </button>
-    </div>
+    @if (displayLogin) {
+      <app-login></app-login>
+    } @else {
+      <span class="mat-display-3">
+        You get a lemon, you get a lemon, you get a lemon...
+      </span>
+    }
   `,
   styles: [
     `
@@ -28,6 +30,8 @@ import { AuthService } from '../auth/auth.service'
   ],
 })
 export class HomeComponent {
+  displayLogin = true
+
   constructor(
     private authService: AuthService,
     private router: Router

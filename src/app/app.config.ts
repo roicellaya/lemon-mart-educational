@@ -12,9 +12,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideAnimationsAsync(),
-    provideHttpClient(
-      withInterceptors([AuthHttpInterceptor])
-    ),
+    provideHttpClient(withInterceptors([AuthHttpInterceptor])),
     {
       provide: AuthService,
       useClass: InMemoryAuthService,
