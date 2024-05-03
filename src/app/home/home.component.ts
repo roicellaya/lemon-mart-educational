@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common'
 import { Component } from '@angular/core'
 import { MatButtonModule } from '@angular/material/button'
 import { Router, RouterLink } from '@angular/router'
@@ -6,18 +7,24 @@ import { combineLatest } from 'rxjs'
 import { filter, tap } from 'rxjs/operators'
 
 import { AuthService } from '../auth/auth.service'
+import { LoginComponent } from '../login/login.component'
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [FlexModule, MatButtonModule, RouterLink],
+  imports: [FlexModule, MatButtonModule, RouterLink, LoginComponent, AsyncPipe],
   template: `
-    <div fxLayout="column" fxLayoutAlign="center center">
-      <span class="mat-display-2">Hello, Limoncu!</span>
-      <button mat-raised-button color="primary" (click)="login()">
-        Login as Manager
-      </button>
-    </div>
+    @if ((authService.authStatus$ | async)?.isAuthenticated) {
+      <div>
+        <div class="mat-display-4">This is LemonMart! The place where</div>
+        <div class="mat-display-4">
+          You get a lemon, you get a lemon, you get a lemon...
+        </div>
+        <div class="mat-display-4">Everybody gets a lemon.</div>
+      </div>
+    } @else {
+      <app-login></app-login>
+    }
   `,
   styles: [
     `
@@ -29,7 +36,7 @@ import { AuthService } from '../auth/auth.service'
 })
 export class HomeComponent {
   constructor(
-    private authService: AuthService,
+    public authService: AuthService,
     private router: Router
   ) {}
   login() {
