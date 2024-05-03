@@ -13,6 +13,7 @@ import { catchError, combineLatest } from 'rxjs'
 import { filter, first, tap } from 'rxjs/operators'
 
 import { AuthService } from '../auth/auth.service'
+import { EmailValidation, PasswordValidation } from '../common/validations'
 import { FieldErrorDirective } from '../user-controls/field-error/field-error.directive'
 
 @Component({
@@ -52,11 +53,8 @@ export class LoginComponent implements OnInit {
 
   constructor() {
     this.loginForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: [
-        '',
-        [Validators.required, Validators.minLength(8), Validators.maxLength(50)],
-      ],
+      email: ['', EmailValidation],
+      password: ['', PasswordValidation],
     })
   }
   get redirectUrl() {
