@@ -13,6 +13,7 @@ import { catchError, combineLatest } from 'rxjs'
 import { filter, first, tap } from 'rxjs/operators'
 
 import { AuthService } from '../auth/auth.service'
+import { UiService } from '../common/ui.service'
 import { EmailValidation, PasswordValidation } from '../common/validations'
 import { FieldErrorDirective } from '../user-controls/field-error/field-error.directive'
 
@@ -50,6 +51,7 @@ export class LoginComponent implements OnInit {
   private readonly route = inject(ActivatedRoute)
   loginForm: FormGroup
   loginError = ''
+  private readonly uiService = inject(UiService)
 
   constructor() {
     this.loginForm = this.formBuilder.group({
@@ -86,6 +88,7 @@ export class LoginComponent implements OnInit {
         filter(([authStatus, user]) => authStatus.isAuthenticated && user?._id !== ''),
         first(),
         tap(([authStatus, user]) => {
+          this.uiService.showToast(`Welcome ${user.fullName}! Role: ${user.role}`)
           this.router.navigate([this.redirectUrl || '/manager'])
         })
       )
