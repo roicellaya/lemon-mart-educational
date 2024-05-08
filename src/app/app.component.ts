@@ -3,6 +3,7 @@ import { Component, DestroyRef, OnInit, inject } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { MatButtonModule } from '@angular/material/button'
 import { MatIconModule, MatIconRegistry } from '@angular/material/icon'
+import { MatSidenavModule } from '@angular/material/sidenav'
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatTooltipModule } from '@angular/material/tooltip'
 import { DomSanitizer } from '@angular/platform-browser'
@@ -10,7 +11,6 @@ import { RouterLink, RouterOutlet } from '@angular/router'
 import { FlexLayoutModule, FlexModule, MediaObserver } from '@ngbracket/ngx-layout'
 import { combineLatest } from 'rxjs'
 import { tap } from 'rxjs/operators'
-import { MatSidenavModule } from '@angular/material/sidenav'
 
 import { AuthService } from './auth/auth.service'
 import { NavigationMenuComponent } from './navigation-menu/navigation-menu.component'
@@ -30,7 +30,7 @@ import { NavigationMenuComponent } from './navigation-menu/navigation-menu.compo
     AsyncPipe,
     NgOptimizedImage,
     MatSidenavModule,
-    NavigationMenuComponent
+    NavigationMenuComponent,
   ],
   template: `
     <div class="app-container">
