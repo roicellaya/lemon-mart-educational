@@ -1,12 +1,15 @@
 import { TestBed } from '@angular/core/testing'
+import { MediaObserver } from '@ngbracket/ngx-layout'
 
 import { AppComponent } from './app.component'
-import { commonTestingModules } from './common/common.testing'
+import { AuthService } from './auth/auth.service'
+import { MediaObserverFake, commonTestingModules } from './common/common.testing'
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [commonTestingModules, AppComponent],
+      imports: [...commonTestingModules],
+      providers: [{ provide: MediaObserver, useClass: MediaObserverFake }, AuthService],
     }).compileComponents()
   })
 
