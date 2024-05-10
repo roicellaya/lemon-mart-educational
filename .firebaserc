@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "lemonmart-educational"
+  },
+  "targets": {
+    "lemonmart-educational": {
+      "hosting": {
+        "lemon-mart-own": [
+          "lemonmart-educational"
+        ]
+      }
+    }
   }
 }
