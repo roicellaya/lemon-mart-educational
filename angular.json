@@ -116,6 +116,23 @@
             ],
             "scripts": []
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "version": 2
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "lemon-mart-own:build:production",
+              "serveTarget": "lemon-mart-own:serve:production"
+            },
+            "development": {
+              "buildTarget": "lemon-mart-own:build:development",
+              "serveTarget": "lemon-mart-own:serve:development"
+            }
+          },
+          "defaultConfiguration": "production"
         }
       }
     }
