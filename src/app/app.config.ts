@@ -14,9 +14,8 @@ import { provideRouter } from '@angular/router'
 
 import { environment } from '../environments/environment'
 import { routes } from './app.routes'
-import { FirebaseAuthService } from './auth/auth.firebase.service'
+import { authFactory } from './auth/auth.factory'
 import { AuthHttpInterceptor } from './auth/auth.http.interceptor'
-import { InMemoryAuthService } from './auth/auth.in-memory.service'
 import { AuthService } from './auth/auth.service'
 import { provideUiService } from './common/ui.service'
 
@@ -27,7 +26,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([AuthHttpInterceptor])),
     {
       provide: AuthService,
-      useClass: FirebaseAuthService,
+      useFactory: authFactory,
     },
     provideUiService(),
     importProvidersFrom(

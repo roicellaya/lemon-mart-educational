@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
 import { AuthService } from '../../auth/auth.service'
 
-import { commonTestingModules, commonTestingProviders } from '../../common/common.testing'
+import { commonTestingModules } from '../../common/common.testing'
 import { LogoutComponent } from './logout.component'
 
 describe('LogoutComponent', () => {
