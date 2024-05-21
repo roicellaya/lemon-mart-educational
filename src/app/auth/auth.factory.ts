@@ -1,6 +1,8 @@
 import { environment } from '../../environments/environment'
+import { CustomAuthService } from './auth.custom.service'
 import { AuthMode } from './auth.enum'
 import { FirebaseAuthService } from './auth.firebase.service'
+import { CustomGraphQLAuthService } from './auth.graphql.custom.service'
 import { InMemoryAuthService } from './auth.in-memory.service'
 
 export function authFactory() {
@@ -10,8 +12,8 @@ export function authFactory() {
     case AuthMode.Firebase:
       return new FirebaseAuthService()
     case AuthMode.CustomServer:
-      throw new Error('Not yet implemented')
+      return new CustomAuthService()
     case AuthMode.CustomGraphQL:
-      throw new Error('Not yet implemented')
+      return new CustomGraphQLAuthService()
   }
 }
