@@ -1,6 +1,13 @@
+import { AsyncPipe } from '@angular/common'
 import { Component, DestroyRef, OnInit, inject } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
+import {
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms'
 import { MatAutocompleteModule } from '@angular/material/autocomplete'
 import { MatButtonModule } from '@angular/material/button'
 import { MatNativeDateModule, MatOptionModule } from '@angular/material/core'
@@ -15,7 +22,7 @@ import { MatStepperModule } from '@angular/material/stepper'
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { FlexModule } from '@ngbracket/ngx-layout'
 import { Observable } from 'rxjs'
-import { filter, tap } from 'rxjs/operators'
+import { filter, map, startWith, tap } from 'rxjs/operators'
 import { $enum } from 'ts-enum-util'
 
 import { Role } from '../../auth/auth.enum'
@@ -26,11 +33,16 @@ import {
   OneCharValidation,
   OptionalTextValidation,
   RequiredTextValidation,
+  USAPhoneNumberValidation,
   USAZipCodeValidation,
 } from '../../common/validations'
+import {
+  ErrorSets,
+  FieldErrorDirective,
+} from '../../user-controls/field-error/field-error.directive'
 import { UserService } from '../user.service'
-import { IUser, PhoneType } from '../user/user'
-import { IUSState } from './data'
+import { IPhone, IUser, PhoneType } from '../user/user'
+import { IUSState, USStateFilter } from './data'
 
 @Component({
   selector: 'app-profile',
@@ -52,6 +64,8 @@ import { IUSState } from './data'
     MatToolbarModule,
     FlexModule,
     ReactiveFormsModule,
+    FieldErrorDirective,
+    AsyncPipe,
   ],
   standalone: true,
 })
@@ -59,10 +73,31 @@ export class ProfileComponent implements OnInit {
   Role = Role
   PhoneType = PhoneType
   PhoneTypes = $enum(PhoneType).getKeys()
-  formGroup: FormGroup | undefined
-  states$: Observable<IUSState[]> | undefined
+  formGroup!: FormGroup
+  states$!: Observable<IUSState[]>
   userError = ''
-  currentUserId: string | undefined
+  currentUserId!: string
+  ErrorSets = ErrorSets
+
+  now = new Date()
+  minDate = new Date(
+    this.now.getFullYear() - 100,
+    this.now.getMonth(),
+    this.now.getDate()
+  )
+
+  get dateOfBirth() {
+    return this.formGroup.get('dateOfBirth')?.value || this.now
+  }
+
+  get age() {
+    return this.now.getFullYear() - this.dateOfBirth.getFullYear()
+  }
+
+  get phonesArray(): FormArray {
+    return this.formGroup.get('phones') as FormArray
+  }
+
   private destroyRef = inject(DestroyRef)
 
   constructor(
@@ -117,6 +152,48 @@ export class ProfileComponent implements OnInit {
         state: [user?.address?.state || '', RequiredTextValidation],
         zip: [user?.address?.zip || '', USAZipCodeValidation],
       }),
+      phones: this.formBuilder.array(this.buildPhoneArray(user?.phones || [])),
     })
+
+    const state = this.formGroup.get('address.state')
+    if (state != null) {
+      this.states$ = state.valueChanges.pipe(
+        startWith(''),
+        map((value) => USStateFilter(value))
+      )
+    }
+  }
+
+  private buildPhoneArray(phones: IPhone[]) {
+    const groups: FormGroup[] = []
+
+    if (phones?.length === 0) {
+      groups.push(this.buildPhoneFormControl(1))
+    } else {
+      phones.forEach((p) => {
+        groups.push(this.buildPhoneFormControl(p.id, p.type, p.digits))
+      })
+    }
+    return groups
+  }
+
+  private buildPhoneFormControl(
+    id: number,
+    type?: string,
+    phoneNumber?: string
+  ): FormGroup {
+    return this.formBuilder.group({
+      id: [id],
+      type: [type || '', Validators.required],
+      digits: [phoneNumber || '', USAPhoneNumberValidation],
+    })
+  }
+
+  convertTypeToPhoneType(type: string): PhoneType {
+    return PhoneType[$enum(PhoneType).asKeyOrThrow(type)]
+  }
+
+  addPhone() {
+    this.phonesArray.push(this.buildPhoneFormControl(this.phonesArray.value.length + 1))
   }
 }
